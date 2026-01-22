@@ -37,6 +37,7 @@ trap cleanup SIGINT  # generated on ctrl-c
 
 SCRIPT_NAME="battman"
 SCRIPT_VERSION="0.0.1"
+SCRIPT_RELEASE="main"
 SCRIPT_LICENSE="gplv3"
 SYSTEM_DOPE_VERSION="0.0.1"
 SCRIPT_HOMEPAGE="https://github.com/systemdope/battman"
