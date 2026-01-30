@@ -13,12 +13,14 @@
 #
 # Battery information can be found in /sys/class/power_supply/BAT0/
 #
-# TODO look through the power_supply directory to detect all available batts
+# TODO look through the power_supply directory to detect all available batts:q
 # TODO BATT_NOW = ${PS_DIR}/energy_now
 # TODO BATT_MAX = cat ${PS_DIR}/energy_full
 # TODO keep a log of battery percentage and power
 # TODO check if the system has a battery, e.g. a desktop does not
 # TODO count the numer of batteries the system has, thinkpad x270 has two
+# TODO add commands
+# 	- 'sources' - AC, BAT0, BAT1, etc.
 
 # Error Handling ##############################################################
 
@@ -52,6 +54,7 @@ TMP_DIR=""  # no temporary directory used at present
 COMMAND=""  # no commands implemented at present
 PS_DIR="/sys/class/power_supply/BAT0"
 STRING=""  # input string passed as argument
+STRING_SET="0"  # used to determine if the user has set the string manually
 
 # Battery information can be found in /sys/class/power_supply/BAT*/
 PS_CAPACITY="unknown"  # capacity: 0-100
@@ -82,7 +85,7 @@ Flags:
 Other
   %%c    PS_CAPACITY  percentage
   %%n    PS_NAME      BAT0
-  %%s    PS_STATUS    charging/discharging
+  %%s    PS_STATUS    Charging, Discharging, Full
   %%t    PS_TYPE      Battery
 
 Author: ${AUTHOR_NAME}
@@ -149,11 +152,6 @@ while [[ $# -gt 0 ]]; do  # $# is the number of script arguments
 			fi
 			shift
 			;;
-		-s|--string)
-			shift
-			STRING+="${1}"
-			shift
-			;;
 		-h|--help)
 			printf "${USAGE}\n"
 			exit
@@ -161,6 +159,12 @@ while [[ $# -gt 0 ]]; do  # $# is the number of script arguments
 		--license)
 			printf "${SCRIPT_LICENSE}\n"
 			exit
+			;;
+		-s|--string)
+			shift
+			STRING_SET="1"
+			STRING+="${1}"
+			shift
 			;;
 		-v|--version)
 			printf "${SCRIPT_NAME} ${SCRIPT_VERSION}\n"
@@ -179,6 +183,11 @@ while [[ $# -gt 0 ]]; do  # $# is the number of script arguments
 done
 
 # Main Logic ##################################################################
+
+# if STRING is empty, replace it with a default string
+if [[ "${STRING_SET}" -eq "0" ]]; then
+	STRING="%t %n is at %c%% and %s"
+fi
 
 STRING="${STRING//\%s/${PS_STATUS}}"
 STRING="${STRING//\%c/${PS_CAPACITY}}"
