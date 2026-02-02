@@ -67,6 +67,9 @@ PS_TYPE="unknown"  # type: Battery
 USAGE="Usage: ${SCRIPT_NAME} [OPTION]...
 Description: ${DESCRIPTION}
 
+Example: ${SCRIPT_NAME}
+Output: Battery BAT0: 78%% and Charging
+
 Example: ${SCRIPT_NAME} -s \"%%n %%%% is %%c\"
 Output: BAT0 %% is 78
 
